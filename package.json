@@ -1,0 +1,10 @@
+{
+  "name": "tarotnavigator",
+  "version": "1.0.0",
+  "bin": {
+    "mapper": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^14.0.0"
+  }
+}
