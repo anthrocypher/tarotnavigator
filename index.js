@@ -47,6 +47,21 @@ function normalizeCardInput(input) {
     }
   }
 
+  // Handle court cards for all suits
+  const courtCards = ['page', 'knight', 'queen', 'king'];
+  for (const suit of suits) {
+    for (const court of courtCards) {
+      const variations = [
+        `${court} of ${suit}`,
+        `${court} ${suit}`
+      ];
+
+      if (variations.includes(normalized)) {
+        return `${court}-${suit}`;
+      }
+    }
+  }
+
   // Return original input if no match
   return input;
 }
