@@ -66,29 +66,34 @@ function normalizeCardInput(input) {
   return input;
 }
 
+// Perform card lookup and display results
+function lookupCard(input) {
+  const normalizedInput = normalizeCardInput(input);
+  const cardCategories = mappings[normalizedInput];
+  if (cardCategories && Array.isArray(cardCategories)) {
+    // Get outputs from all categories for this card
+    const allOutputs = [];
+    for (const category of cardCategories) {
+      const categoryOutputs = mappings[category];
+      if (categoryOutputs && Array.isArray(categoryOutputs)) {
+        allOutputs.push(...categoryOutputs);
+      }
+    }
+
+    if (allOutputs.length > 0) {
+      console.log('\n' + allOutputs.join('\n\n') + '\n');
+    } else {
+      console.log('No outputs defined for card categories:', cardCategories.join(', '));
+    }
+  } else {
+    console.log('No mapping found for:', input);
+  }
+}
+
 program
   .argument('<input>', 'string to map')
   .action((input) => {
-    const normalizedInput = normalizeCardInput(input);
-    const cardCategories = mappings[normalizedInput];
-    if (cardCategories && Array.isArray(cardCategories)) {
-      // Get outputs from all categories for this card
-      const allOutputs = [];
-      for (const category of cardCategories) {
-        const categoryOutputs = mappings[category];
-        if (categoryOutputs && Array.isArray(categoryOutputs)) {
-          allOutputs.push(...categoryOutputs);
-        }
-      }
-
-      if (allOutputs.length > 0) {
-        console.log('\n' + allOutputs.join('\n\n') + '\n');
-      } else {
-        console.log('No outputs defined for card categories:', cardCategories.join(', '));
-      }
-    } else {
-      console.log('No mapping found for:', input);
-    }
+    lookupCard(input);
   });
 
 program.parse();
