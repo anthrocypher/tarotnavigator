@@ -415,13 +415,50 @@ async function browseByType() {
 }
 
 async function searchCardsMenu() {
-  console.log('Search - Coming soon');
-  await showMainMenu();
+  const { searchQuery } = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'searchQuery',
+      message: 'Enter search term (or press Enter to go back):'
+    }
+  ]);
+
+  if (!searchQuery || searchQuery.trim() === '') {
+    await showMainMenu();
+    return;
+  }
+
+  const results = searchCards(searchQuery);
+
+  if (results.length === 0) {
+    console.log(`\nNo cards found matching "${searchQuery}"`);
+    const { action } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: 'What would you like to do?',
+        choices: [
+          { name: 'Search again', value: 'search' },
+          { name: 'Back to Main Menu', value: 'menu' }
+        ]
+      }
+    ]);
+
+    if (action === 'search') {
+      await searchCardsMenu();
+    } else {
+      await showMainMenu();
+    }
+    return;
+  }
+
+  console.log(`\nFound ${results.length} card(s) matching "${searchQuery}"\n`);
+  await selectFromCardList(results, searchCardsMenu);
 }
 
 async function showRandomCard() {
-  console.log('Random Card - Coming soon');
-  await showMainMenu();
+  const randomCard = getRandomCard();
+  await displayCardAndPrompt(randomCard);
 }
 
 // Start interactive REPL mode
