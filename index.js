@@ -356,8 +356,29 @@ async function selectFromCardList(cards, returnFunction) {
 }
 
 async function browseBySuit() {
-  console.log('Browse by Suit - Coming soon');
-  await showMainMenu();
+  const { suitChoice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'suitChoice',
+      message: 'Select a suit:',
+      choices: [
+        { name: 'Cups (Emotional lives, relationships)', value: 'cups' },
+        { name: 'Pentacles (Life\'s work, making vision tangible)', value: 'pentacles' },
+        { name: 'Swords (Communication, mindfulness, truth)', value: 'swords' },
+        { name: 'Wands (Physical energy, respecting limits)', value: 'wands' },
+        new inquirer.Separator(),
+        { name: 'Back to Main Menu', value: 'back' }
+      ]
+    }
+  ]);
+
+  if (suitChoice === 'back') {
+    await showMainMenu();
+    return;
+  }
+
+  const suitCards = getCardsBySuit(suitChoice);
+  await selectFromCardList(suitCards, browseBySuit);
 }
 
 async function browseByType() {
