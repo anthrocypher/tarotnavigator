@@ -251,10 +251,108 @@ async function showMainMenu() {
   }
 }
 
-// Placeholder submenu functions (to be implemented)
+// Browse by Category submenu
 async function browseByCategory() {
-  console.log('Browse by Category - Coming soon');
-  await showMainMenu();
+  const { categoryChoice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'categoryChoice',
+      message: 'Select a category:',
+      choices: [
+        { name: 'Major Arcana', value: 'major' },
+        { name: 'Minor Arcana', value: 'minor' },
+        new inquirer.Separator(),
+        { name: 'Back to Main Menu', value: 'back' }
+      ]
+    }
+  ]);
+
+  if (categoryChoice === 'back') {
+    await showMainMenu();
+    return;
+  }
+
+  if (categoryChoice === 'major') {
+    await browseMajorArcana();
+  } else if (categoryChoice === 'minor') {
+    await browseMinorArcana();
+  }
+}
+
+// Browse Major Arcana with line filtering
+async function browseMajorArcana() {
+  const { lineChoice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'lineChoice',
+      message: 'Select a line:',
+      choices: [
+        { name: 'Line 1 (Foundational identity, showing up in the world)', value: 'line1' },
+        { name: 'Line 2 (In-betweenness, going within)', value: 'line2' },
+        { name: 'Line 3 (Healing, moving to higher selves)', value: 'line3' },
+        { name: 'All Major Arcana', value: 'all' },
+        new inquirer.Separator(),
+        { name: 'Back', value: 'back' }
+      ]
+    }
+  ]);
+
+  if (lineChoice === 'back') {
+    await browseByCategory();
+    return;
+  }
+
+  let cards;
+  if (lineChoice === 'all') {
+    cards = getAllMajorArcana();
+  } else {
+    cards = getMajorArcanaByLine(lineChoice);
+  }
+
+  await selectFromCardList(cards, browseMajorArcana);
+}
+
+// Browse Minor Arcana
+async function browseMinorArcana() {
+  const minorCards = getAllCards().filter(card => {
+    const categories = mappings[card];
+    return categories && !categories.includes('majors');
+  });
+
+  await selectFromCardList(minorCards, browseMinorArcana);
+}
+
+// Generic card selection from a list
+async function selectFromCardList(cards, returnFunction) {
+  if (cards.length === 0) {
+    console.log('\nNo cards found in this category.');
+    await returnFunction();
+    return;
+  }
+
+  const choices = cards.map(card => ({
+    name: formatCardName(card),
+    value: card
+  }));
+
+  choices.push(new inquirer.Separator());
+  choices.push({ name: 'Back', value: 'back' });
+
+  const { selectedCard } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'selectedCard',
+      message: 'Select a card:',
+      choices: choices,
+      pageSize: 15
+    }
+  ]);
+
+  if (selectedCard === 'back') {
+    await returnFunction();
+  } else {
+    await displayCardAndPrompt(selectedCard);
+  }
 }
 
 async function browseBySuit() {
