@@ -2,7 +2,6 @@
 const { Command } = require('commander');
 const fs = require('fs');
 const path = require('path');
-const readline = require('readline');
 const inquirer = require('inquirer');
 
 const program = new Command();
