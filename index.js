@@ -176,6 +176,107 @@ function searchCards(query) {
   });
 }
 
+// ===== Menu System Functions =====
+
+// Display a card and ask if user wants to continue
+async function displayCardAndPrompt(cardKey) {
+  console.log('\n' + '='.repeat(50));
+  console.log(formatCardName(cardKey).toUpperCase());
+  console.log('='.repeat(50));
+  lookupCard(cardKey);
+
+  const { action } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'action',
+      message: 'What would you like to do?',
+      choices: [
+        { name: 'Return to Main Menu', value: 'menu' },
+        { name: 'Exit', value: 'exit' }
+      ]
+    }
+  ]);
+
+  if (action === 'menu') {
+    await showMainMenu();
+  } else {
+    console.log('\nGoodbye!');
+    process.exit(0);
+  }
+}
+
+// Main menu
+async function showMainMenu() {
+  console.log('\n' + '='.repeat(50));
+  console.log('TAROT NAVIGATOR - Main Menu');
+  console.log('='.repeat(50) + '\n');
+
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Select an option:',
+      choices: [
+        { name: 'Browse by Category (Major/Minor Arcana)', value: 'category' },
+        { name: 'Browse by Suit', value: 'suit' },
+        { name: 'Browse by Type (Court/Numbered/Major)', value: 'type' },
+        { name: 'Search for a Card', value: 'search' },
+        { name: 'Random Card', value: 'random' },
+        new inquirer.Separator(),
+        { name: 'Exit', value: 'exit' }
+      ]
+    }
+  ]);
+
+  switch (choice) {
+    case 'category':
+      await browseByCategory();
+      break;
+    case 'suit':
+      await browseBySuit();
+      break;
+    case 'type':
+      await browseByType();
+      break;
+    case 'search':
+      await searchCardsMenu();
+      break;
+    case 'random':
+      await showRandomCard();
+      break;
+    case 'exit':
+      console.log('\nGoodbye!');
+      process.exit(0);
+      break;
+  }
+}
+
+// Placeholder submenu functions (to be implemented)
+async function browseByCategory() {
+  console.log('Browse by Category - Coming soon');
+  await showMainMenu();
+}
+
+async function browseBySuit() {
+  console.log('Browse by Suit - Coming soon');
+  await showMainMenu();
+}
+
+async function browseByType() {
+  console.log('Browse by Type - Coming soon');
+  await showMainMenu();
+}
+
+async function searchCardsMenu() {
+  console.log('Search - Coming soon');
+  await showMainMenu();
+}
+
+async function showRandomCard() {
+  console.log('Random Card - Coming soon');
+  await showMainMenu();
+}
+
 // Start interactive REPL mode
 function startInteractiveMode() {
   const rl = readline.createInterface({
