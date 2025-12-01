@@ -382,8 +382,36 @@ async function browseBySuit() {
 }
 
 async function browseByType() {
-  console.log('Browse by Type - Coming soon');
-  await showMainMenu();
+  const { typeChoice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'typeChoice',
+      message: 'Select a type:',
+      choices: [
+        { name: 'Major Arcana', value: 'major' },
+        { name: 'Court Cards (Page, Knight, Queen, King)', value: 'court' },
+        { name: 'Numbered Cards (Ace through 10)', value: 'numbered' },
+        new inquirer.Separator(),
+        { name: 'Back to Main Menu', value: 'back' }
+      ]
+    }
+  ]);
+
+  if (typeChoice === 'back') {
+    await showMainMenu();
+    return;
+  }
+
+  let cards;
+  if (typeChoice === 'major') {
+    cards = getAllMajorArcana();
+  } else if (typeChoice === 'court') {
+    cards = getCourtCards();
+  } else if (typeChoice === 'numbered') {
+    cards = getNumberedCards();
+  }
+
+  await selectFromCardList(cards, browseByType);
 }
 
 async function searchCardsMenu() {
