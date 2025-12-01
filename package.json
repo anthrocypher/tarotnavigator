@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "commander": "^14.0.0",
-    "inquirer": "^13.0.1"
+    "inquirer": "^8.2.7"
   }
 }
