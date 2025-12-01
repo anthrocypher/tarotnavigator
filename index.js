@@ -461,39 +461,17 @@ async function showRandomCard() {
   await displayCardAndPrompt(randomCard);
 }
 
-// Start interactive REPL mode
-function startInteractiveMode() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: 'Enter card: '
-  });
-
-  console.log('TarotNavigator - Interactive Mode');
-  console.log('Type a card name to look it up\n');
-
-  rl.prompt();
-
-  rl.on('line', (line) => {
-    const input = line.trim();
-
-    if (input) {
-      lookupCard(input);
-    }
-
-    rl.prompt();
-  });
-
-  rl.on('close', () => {
-    console.log('\nGoodbye!');
-    process.exit(0);
-  });
-}
-
+// CLI entry point
 program
-  .argument('<input>', 'string to map')
-  .action((input) => {
-    lookupCard(input);
+  .argument('[input]', 'Card name to look up (optional - omit to launch interactive menu)')
+  .action(async (input) => {
+    if (input) {
+      // Single-shot lookup mode
+      lookupCard(input);
+    } else {
+      // Interactive menu mode
+      await showMainMenu();
+    }
   });
 
 program.parse();
