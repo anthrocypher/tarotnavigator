@@ -419,8 +419,8 @@ async function browseBySuit() {
       message: 'How would you like to view these cards?',
       choices: [
         { name: 'Show All Cards', value: 'all' },
-        { name: 'Court Cards Only (Page, Knight, Queen, King)', value: 'court' },
-        { name: 'Numbered Cards Only (Ace through 10)', value: 'numbered' },
+        { name: 'Court Cards (Page, Knight, Queen, King)', value: 'court' },
+        { name: 'Numbered Cards (Ace through 10)', value: 'numbered' },
         new inquirer.Separator(),
         { name: 'Back', value: 'back' }
       ]
@@ -467,12 +467,47 @@ async function browseByType() {
   }
 
   let cards;
+
+  // Major Arcana don't have suits, so show them directly
   if (typeChoice === 'major') {
     cards = getAllMajorArcana();
-  } else if (typeChoice === 'court') {
+    await selectFromCardList(cards, browseByType);
+    return;
+  }
+
+  // For Court and Numbered cards, offer suit filtering
+  const { suitFilter } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'suitFilter',
+      message: 'Filter by suit?',
+      choices: [
+        { name: 'Show All Suits', value: 'all' },
+        { name: 'Cups', value: 'cups' },
+        { name: 'Pentacles', value: 'pentacles' },
+        { name: 'Swords', value: 'swords' },
+        { name: 'Wands', value: 'wands' },
+        new inquirer.Separator(),
+        { name: 'Back', value: 'back' }
+      ]
+    }
+  ]);
+
+  if (suitFilter === 'back') {
+    await browseByType();
+    return;
+  }
+
+  // Get cards based on type
+  if (typeChoice === 'court') {
     cards = getCourtCards();
   } else if (typeChoice === 'numbered') {
     cards = getNumberedCards();
+  }
+
+  // Filter by suit if not 'all'
+  if (suitFilter !== 'all') {
+    cards = filterCardsBySuit(cards, suitFilter);
   }
 
   await selectFromCardList(cards, browseByType);
