@@ -360,13 +360,17 @@ async function selectFromCardList(cards, returnFunction) {
     return;
   }
 
-  const choices = cards.map(card => ({
+  // Build choices array
+  const cardChoices = cards.map(card => ({
     name: formatCardName(card),
     value: card
   }));
 
-  choices.push(new inquirer.Separator());
-  choices.push({ name: 'Back', value: 'back' });
+  const choices = [
+    ...cardChoices,
+    new inquirer.Separator(),
+    { name: 'Back', value: 'back' }
+  ];
 
   const { selectedCard } = await inquirer.prompt([
     {
@@ -374,7 +378,8 @@ async function selectFromCardList(cards, returnFunction) {
       name: 'selectedCard',
       message: 'Select a card:',
       choices: choices,
-      pageSize: 15
+      pageSize: 15,
+      loop: false
     }
   ]);
 
