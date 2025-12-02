@@ -255,7 +255,6 @@ async function showMainMenu() {
         { name: 'Browse by Suit', value: 'suit' },
         { name: 'Browse by Type (Court/Numbered/Major)', value: 'type' },
         { name: 'Search for a Card', value: 'search' },
-        { name: 'Random Card', value: 'random' },
         new inquirer.Separator(),
         { name: 'Exit', value: 'exit' }
       ]
@@ -274,9 +273,6 @@ async function showMainMenu() {
       break;
     case 'search':
       await searchCardsMenu();
-      break;
-    case 'random':
-      await showRandomCard();
       break;
     case 'exit':
       console.log('\nGoodbye!');
