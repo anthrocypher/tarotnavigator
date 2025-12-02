@@ -141,6 +141,32 @@ function getNumberedCards() {
   });
 }
 
+// ===== Cross-Category Filtering Functions =====
+
+// Get court cards for a specific suit
+function getCourtCardsBySuit(suit) {
+  return getCourtCards().filter(card => {
+    const categories = mappings[card];
+    return categories && categories.includes(suit);
+  });
+}
+
+// Get numbered cards for a specific suit
+function getNumberedCardsBySuit(suit) {
+  return getNumberedCards().filter(card => {
+    const categories = mappings[card];
+    return categories && categories.includes(suit);
+  });
+}
+
+// Get cards by type filtered by suit (for Browse by Type → filter by suit)
+function filterCardsBySuit(cards, suit) {
+  return cards.filter(card => {
+    const categories = mappings[card];
+    return categories && categories.includes(suit);
+  });
+}
+
 // Format card name for display (e.g., "ace-cups" -> "Ace of Cups")
 function formatCardName(cardKey) {
   // Handle major arcana
