@@ -411,7 +411,37 @@ async function browseBySuit() {
     return;
   }
 
-  const suitCards = getCardsBySuit(suitChoice);
+  // Ask for filtering preference
+  const { filterChoice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'filterChoice',
+      message: 'How would you like to view these cards?',
+      choices: [
+        { name: 'Show All Cards', value: 'all' },
+        { name: 'Court Cards Only (Page, Knight, Queen, King)', value: 'court' },
+        { name: 'Numbered Cards Only (Ace through 10)', value: 'numbered' },
+        new inquirer.Separator(),
+        { name: 'Back', value: 'back' }
+      ]
+    }
+  ]);
+
+  if (filterChoice === 'back') {
+    await browseBySuit();
+    return;
+  }
+
+  // Get filtered cards based on choice
+  let suitCards;
+  if (filterChoice === 'all') {
+    suitCards = getCardsBySuit(suitChoice);
+  } else if (filterChoice === 'court') {
+    suitCards = getCourtCardsBySuit(suitChoice);
+  } else if (filterChoice === 'numbered') {
+    suitCards = getNumberedCardsBySuit(suitChoice);
+  }
+
   await selectFromCardList(suitCards, browseBySuit);
 }
 
