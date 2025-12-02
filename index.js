@@ -169,9 +169,18 @@ function getRandomCard() {
 // Search cards by name
 function searchCards(query) {
   const normalizedQuery = query.toLowerCase();
-  return getAllCards().filter(card => {
+  const allCards = getAllCards();
+
+  // First, try to normalize the input as if it's a card name
+  const normalizedCardKey = normalizeCardInput(query);
+
+  // Filter cards that match
+  return allCards.filter(card => {
     const formattedName = formatCardName(card).toLowerCase();
-    return formattedName.includes(normalizedQuery) || card.includes(normalizedQuery);
+    // Check if: formatted name includes query, card key includes query, or card key matches normalized input
+    return formattedName.includes(normalizedQuery) ||
+           card.includes(normalizedQuery) ||
+           card === normalizedCardKey;
   });
 }
 
