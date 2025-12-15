@@ -15,6 +15,27 @@ const mappings = JSON.parse(
 function normalizeCardInput(input) {
   const normalized = input.toLowerCase().trim();
 
+  // Map of Major Arcana aliases to canonical names
+  const majorArcanaAliases = {
+    'le mat': 'fool',
+    'magus': 'magician',
+    'le bateleur': 'magician',
+    'priestess': 'high-priestess',
+    'la papesse': 'high-priestess',
+    'pope': 'hierophant',
+    'lust': 'strength',
+    'adjustment': 'justice',
+    'hanged man': 'suspension',
+    'art': 'temperance',
+    'aeon': 'judgement',
+    'universe': 'world'
+  };
+
+  // Check if input matches a Major Arcana alias
+  if (majorArcanaAliases[normalized]) {
+    return majorArcanaAliases[normalized];
+  }
+
   // Map of number words to digits for Cups cards
   const numberWords = {
     'ace': 'ace',
