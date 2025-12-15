@@ -13,7 +13,12 @@ const mappings = JSON.parse(
 
 // Normalize input to match our internal card identifiers
 function normalizeCardInput(input) {
-  const normalized = input.toLowerCase().trim();
+  let normalized = input.toLowerCase().trim();
+
+  // Strip "the " prefix if present (for Major Arcana cards like "The Fool")
+  if (normalized.startsWith('the ')) {
+    normalized = normalized.substring(4);
+  }
 
   // Map of Major Arcana aliases to canonical names
   const majorArcanaAliases = {
@@ -84,8 +89,13 @@ function normalizeCardInput(input) {
     }
   }
 
-  // Return original input if no match
-  return input;
+  // Replace spaces with hyphens for canonical card name matching
+  // (e.g., "high priestess" -> "high-priestess", "wheel of fortune" -> "wheel-of-fortune")
+  // This handles Major Arcana multi-word names that didn't match aliases or minor arcana patterns
+  normalized = normalized.replace(/\s+/g, '-');
+
+  // Return normalized input
+  return normalized;
 }
 
 // Perform card lookup and display results
