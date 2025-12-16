@@ -444,12 +444,15 @@ async function browseMinorArcana(breadcrumb = createBreadcrumb()) {
 }
 
 // Generic card selection from a list
-async function selectFromCardList(cards, returnFunction) {
+async function selectFromCardList(cards, returnFunction, breadcrumb = createBreadcrumb(), promptText = 'Select a card:') {
   if (cards.length === 0) {
     console.log('\nNo cards found in this category.');
-    await returnFunction();
+    await returnFunction(breadcrumb);
     return;
   }
+
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
 
   // Build choices array
   const cardChoices = cards.map(card => ({
@@ -467,7 +470,7 @@ async function selectFromCardList(cards, returnFunction) {
     {
       type: 'list',
       name: 'selectedCard',
-      message: 'Select a card:',
+      message: promptText,
       choices: choices,
       pageSize: 15,
       loop: false
@@ -475,9 +478,10 @@ async function selectFromCardList(cards, returnFunction) {
   ]);
 
   if (selectedCard === 'back') {
-    await returnFunction();
+    await returnFunction(breadcrumb);
   } else {
-    await displayCardAndPrompt(selectedCard);
+    const newBreadcrumb = addBreadcrumbStep(breadcrumb, promptText, formatCardName(selectedCard));
+    await displayCardAndPrompt(selectedCard, newBreadcrumb);
   }
 }
 
