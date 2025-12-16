@@ -31,8 +31,8 @@ function formatBreadcrumb(breadcrumb) {
   }
 
   const formatted = breadcrumb.trail
-    .map(step => `${chalk.white(step.prompt)} ${chalk.blue(step.selection)}`)
-    .join(chalk.white(' → '));
+    .map(step => chalk.blue(step.selection))
+    .join(' → ');
 
   return '\n' + formatted + '\n';
 }
