@@ -564,7 +564,10 @@ async function browseBySuit(breadcrumb = createBreadcrumb()) {
   await selectFromCardList(suitCards, browseBySuit, finalBreadcrumb, 'Select a card:');
 }
 
-async function browseByType() {
+async function browseByType(breadcrumb = createBreadcrumb()) {
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
+
   const { typeChoice } = await inquirer.prompt([
     {
       type: 'list',
@@ -581,20 +584,31 @@ async function browseByType() {
   ]);
 
   if (typeChoice === 'back') {
-    await showMainMenu();
+    await showMainMenu(breadcrumb);
     return;
   }
 
+  // Map type choice to display text
+  const typeMap = {
+    'major': 'Major Arcana',
+    'court': 'Court Cards',
+    'numbered': 'Numbered Cards'
+  };
+
   let cards;
+  const breadcrumbAfterType = addBreadcrumbStep(breadcrumb, 'Select a type:', typeMap[typeChoice]);
 
   // Major Arcana don't have suits, so show them directly
   if (typeChoice === 'major') {
     cards = getAllMajorArcana();
-    await selectFromCardList(cards, browseByType);
+    await selectFromCardList(cards, browseByType, breadcrumbAfterType, 'Select a card:');
     return;
   }
 
   // For Court and Numbered cards, offer suit filtering
+  // Display updated breadcrumb
+  displayBreadcrumb(breadcrumbAfterType);
+
   const { suitFilter } = await inquirer.prompt([
     {
       type: 'list',
@@ -613,7 +627,7 @@ async function browseByType() {
   ]);
 
   if (suitFilter === 'back') {
-    await browseByType();
+    await browseByType(breadcrumb);
     return;
   }
 
@@ -625,11 +639,22 @@ async function browseByType() {
   }
 
   // Filter by suit if not 'all'
+  let filterText;
   if (suitFilter !== 'all') {
     cards = filterCardsBySuit(cards, suitFilter);
+    const suitMap = {
+      'cups': 'Cups',
+      'pentacles': 'Pentacles',
+      'swords': 'Swords',
+      'wands': 'Wands'
+    };
+    filterText = suitMap[suitFilter];
+  } else {
+    filterText = 'Show All Suits';
   }
 
-  await selectFromCardList(cards, browseByType);
+  const finalBreadcrumb = addBreadcrumbStep(breadcrumbAfterType, 'Filter by suit?', filterText);
+  await selectFromCardList(cards, browseByType, finalBreadcrumb, 'Select a card:');
 }
 
 async function searchCardsMenu() {
