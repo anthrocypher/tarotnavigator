@@ -304,10 +304,13 @@ async function displayCardAndPrompt(cardKey) {
 }
 
 // Main menu
-async function showMainMenu() {
+async function showMainMenu(breadcrumb = createBreadcrumb()) {
   console.log('\n' + '='.repeat(50));
   console.log('TAROT NAVIGATOR - Main Menu');
   console.log('='.repeat(50) + '\n');
+
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
 
   const { choice } = await inquirer.prompt([
     {
@@ -327,16 +330,20 @@ async function showMainMenu() {
 
   switch (choice) {
     case 'category':
-      await browseByCategory();
+      const categoryBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select an option:', 'Browse by Category (Major/Minor Arcana)');
+      await browseByCategory(categoryBreadcrumb);
       break;
     case 'suit':
-      await browseBySuit();
+      const suitBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select an option:', 'Browse by Suit');
+      await browseBySuit(suitBreadcrumb);
       break;
     case 'type':
-      await browseByType();
+      const typeBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select an option:', 'Browse by Type (Court/Numbered/Major)');
+      await browseByType(typeBreadcrumb);
       break;
     case 'search':
-      await searchCardsMenu();
+      const searchBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select an option:', 'Search for a Card');
+      await searchCardsMenu(searchBreadcrumb);
       break;
     case 'exit':
       console.log('\nGoodbye!');
