@@ -657,7 +657,10 @@ async function browseByType(breadcrumb = createBreadcrumb()) {
   await selectFromCardList(cards, browseByType, finalBreadcrumb, 'Select a card:');
 }
 
-async function searchCardsMenu() {
+async function searchCardsMenu(breadcrumb = createBreadcrumb()) {
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
+
   const { searchQuery } = await inquirer.prompt([
     {
       type: 'input',
@@ -667,7 +670,7 @@ async function searchCardsMenu() {
   ]);
 
   if (!searchQuery || searchQuery.trim() === '') {
-    await showMainMenu();
+    await showMainMenu(breadcrumb);
     return;
   }
 
@@ -688,15 +691,20 @@ async function searchCardsMenu() {
     ]);
 
     if (action === 'search') {
-      await searchCardsMenu();
+      await searchCardsMenu(breadcrumb);
     } else {
-      await showMainMenu();
+      await showMainMenu(breadcrumb);
     }
     return;
   }
 
   console.log(`\nFound ${results.length} card(s) matching "${searchQuery}"\n`);
-  await selectFromCardList(results, searchCardsMenu);
+
+  // Truncate long search queries for breadcrumb display
+  const displayQuery = searchQuery.length > 30 ? searchQuery.substring(0, 27) + '...' : searchQuery;
+  const newBreadcrumb = addBreadcrumbStep(breadcrumb, 'Search:', displayQuery);
+
+  await selectFromCardList(results, searchCardsMenu, newBreadcrumb, 'Select a card:');
 }
 
 async function showRandomCard() {
