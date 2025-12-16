@@ -386,7 +386,10 @@ async function browseByCategory(breadcrumb = createBreadcrumb()) {
 }
 
 // Browse Major Arcana with line filtering
-async function browseMajorArcana() {
+async function browseMajorArcana(breadcrumb = createBreadcrumb()) {
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
+
   const { lineChoice } = await inquirer.prompt([
     {
       type: 'list',
@@ -404,18 +407,30 @@ async function browseMajorArcana() {
   ]);
 
   if (lineChoice === 'back') {
-    await browseByCategory();
+    await browseByCategory(breadcrumb);
     return;
   }
 
   let cards;
+  let selectionText;
+
+  // Map verbose choice text to concise breadcrumb text
+  const lineMap = {
+    'line1': 'Line 1',
+    'line2': 'Line 2',
+    'line3': 'Line 3',
+    'all': 'All Major Arcana'
+  };
+
   if (lineChoice === 'all') {
     cards = getAllMajorArcana();
   } else {
     cards = getMajorArcanaByLine(lineChoice);
   }
 
-  await selectFromCardList(cards, browseMajorArcana);
+  selectionText = lineMap[lineChoice];
+  const newBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select a line:', selectionText);
+  await selectFromCardList(cards, browseMajorArcana, newBreadcrumb, 'Select a card:');
 }
 
 // Browse Minor Arcana
