@@ -485,7 +485,10 @@ async function selectFromCardList(cards, returnFunction, breadcrumb = createBrea
   }
 }
 
-async function browseBySuit() {
+async function browseBySuit(breadcrumb = createBreadcrumb()) {
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
+
   const { suitChoice } = await inquirer.prompt([
     {
       type: 'list',
@@ -503,9 +506,23 @@ async function browseBySuit() {
   ]);
 
   if (suitChoice === 'back') {
-    await showMainMenu();
+    await showMainMenu(breadcrumb);
     return;
   }
+
+  // Map verbose suit names to concise breadcrumb text
+  const suitMap = {
+    'cups': 'Cups',
+    'pentacles': 'Pentacles',
+    'swords': 'Swords',
+    'wands': 'Wands'
+  };
+
+  // Add suit to breadcrumb
+  const breadcrumbAfterSuit = addBreadcrumbStep(breadcrumb, 'Select a suit:', suitMap[suitChoice]);
+
+  // Display updated breadcrumb for filter question
+  displayBreadcrumb(breadcrumbAfterSuit);
 
   // Ask for filtering preference
   const { filterChoice } = await inquirer.prompt([
@@ -524,21 +541,27 @@ async function browseBySuit() {
   ]);
 
   if (filterChoice === 'back') {
-    await browseBySuit();
+    await browseBySuit(breadcrumb);
     return;
   }
 
   // Get filtered cards based on choice
   let suitCards;
+  let filterText;
+
   if (filterChoice === 'all') {
     suitCards = getCardsBySuit(suitChoice);
+    filterText = 'Show All Cards';
   } else if (filterChoice === 'court') {
     suitCards = getCourtCardsBySuit(suitChoice);
+    filterText = 'Court Cards';
   } else if (filterChoice === 'numbered') {
     suitCards = getNumberedCardsBySuit(suitChoice);
+    filterText = 'Numbered Cards';
   }
 
-  await selectFromCardList(suitCards, browseBySuit);
+  const finalBreadcrumb = addBreadcrumbStep(breadcrumbAfterSuit, 'How would you like to view these cards?', filterText);
+  await selectFromCardList(suitCards, browseBySuit, finalBreadcrumb, 'Select a card:');
 }
 
 async function browseByType() {
