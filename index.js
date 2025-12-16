@@ -434,13 +434,13 @@ async function browseMajorArcana(breadcrumb = createBreadcrumb()) {
 }
 
 // Browse Minor Arcana
-async function browseMinorArcana() {
+async function browseMinorArcana(breadcrumb = createBreadcrumb()) {
   const minorCards = getAllCards().filter(card => {
     const categories = mappings[card];
     return categories && !categories.includes('majors');
   });
 
-  await selectFromCardList(minorCards, browseMinorArcana);
+  await selectFromCardList(minorCards, browseMinorArcana, breadcrumb, 'Select a card:');
 }
 
 // Generic card selection from a list
