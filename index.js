@@ -353,7 +353,10 @@ async function showMainMenu(breadcrumb = createBreadcrumb()) {
 }
 
 // Browse by Category submenu
-async function browseByCategory() {
+async function browseByCategory(breadcrumb = createBreadcrumb()) {
+  // Display breadcrumb trail
+  displayBreadcrumb(breadcrumb);
+
   const { categoryChoice } = await inquirer.prompt([
     {
       type: 'list',
@@ -369,14 +372,16 @@ async function browseByCategory() {
   ]);
 
   if (categoryChoice === 'back') {
-    await showMainMenu();
+    await showMainMenu(breadcrumb);
     return;
   }
 
   if (categoryChoice === 'major') {
-    await browseMajorArcana();
+    const majorBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select a category:', 'Major Arcana');
+    await browseMajorArcana(majorBreadcrumb);
   } else if (categoryChoice === 'minor') {
-    await browseMinorArcana();
+    const minorBreadcrumb = addBreadcrumbStep(breadcrumb, 'Select a category:', 'Minor Arcana');
+    await browseMinorArcana(minorBreadcrumb);
   }
 }
 
