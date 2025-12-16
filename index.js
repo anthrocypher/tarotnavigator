@@ -277,10 +277,14 @@ function searchCards(query) {
 // ===== Menu System Functions =====
 
 // Display a card and ask if user wants to continue
-async function displayCardAndPrompt(cardKey) {
+async function displayCardAndPrompt(cardKey, breadcrumb = createBreadcrumb()) {
   console.log('\n' + '='.repeat(50));
   console.log(formatCardName(cardKey).toUpperCase());
   console.log('='.repeat(50));
+
+  // Display breadcrumb trail showing complete navigation path
+  displayBreadcrumb(breadcrumb);
+
   lookupCard(cardKey);
 
   const { action } = await inquirer.prompt([
@@ -296,7 +300,8 @@ async function displayCardAndPrompt(cardKey) {
   ]);
 
   if (action === 'menu') {
-    await showMainMenu();
+    // Reset breadcrumb when returning to main menu
+    await showMainMenu(createBreadcrumb());
   } else {
     console.log('\nGoodbye!');
     process.exit(0);
