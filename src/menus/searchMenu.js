@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const { createBreadcrumb, addBreadcrumbStep, displayBreadcrumb } = require('../breadcrumbs');
-const { searchCards } = require('../cardHelpers');
-const { selectFromCardList } = require('./categoryMenu');
+const { searchCards, formatCardName } = require('../cardHelpers');
+const { selectFromCardList, displayCardAndPrompt } = require('./categoryMenu');
 
 async function searchCardsMenu(breadcrumb = createBreadcrumb()) {
   // Display breadcrumb trail
@@ -46,13 +46,20 @@ async function searchCardsMenu(breadcrumb = createBreadcrumb()) {
     return;
   }
 
-  console.log(`\nFound ${results.length} card(s) matching "${searchQuery}"\n`);
-
   // Truncate long search queries for breadcrumb display
   const displayQuery = searchQuery.length > 30 ? searchQuery.substring(0, 27) + '...' : searchQuery;
   const newBreadcrumb = addBreadcrumbStep(breadcrumb, 'Search:', displayQuery);
 
-  await selectFromCardList(results, searchCardsMenu, newBreadcrumb, 'Select a card:');
+  if (results.length === 1) {
+    // Single match - display immediately
+    const cardKey = results[0];
+    const cardBreadcrumb = addBreadcrumbStep(newBreadcrumb, 'Card:', formatCardName(cardKey));
+    await displayCardAndPrompt(cardKey, cardBreadcrumb);
+  } else {
+    // Multiple matches - let user select
+    console.log(`\nFound ${results.length} cards matching "${searchQuery}"\n`);
+    await selectFromCardList(results, searchCardsMenu, newBreadcrumb, 'Select a card:');
+  }
 }
 
 module.exports = {
