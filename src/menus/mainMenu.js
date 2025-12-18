@@ -16,10 +16,10 @@ async function showMainMenu(breadcrumb = createBreadcrumb()) {
       name: 'choice',
       message: 'Select an option:',
       choices: [
+        { name: 'Search for a Card', value: 'search' },
         { name: 'Browse by Category (Major/Minor Arcana)', value: 'category' },
         { name: 'Browse by Suit', value: 'suit' },
         { name: 'Browse by Type (Court/Numbered/Major)', value: 'type' },
-        { name: 'Search for a Card', value: 'search' },
         new inquirer.Separator(),
         { name: 'Exit', value: 'exit' }
       ]
