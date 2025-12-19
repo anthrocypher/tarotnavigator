@@ -169,7 +169,13 @@ async function browseMinorArcana(breadcrumb = createBreadcrumb()) {
     return categories && !categories.includes('majors');
   });
 
-  await selectFromCardList(minorCards, browseMinorArcana, breadcrumb, 'Select a card:');
+  // Return to main menu when Back is pressed
+  const returnToMainMenu = async () => {
+    const { showMainMenu } = require('./mainMenu');
+    await showMainMenu(createBreadcrumb());
+  };
+
+  await selectFromCardList(minorCards, returnToMainMenu, breadcrumb, 'Select a card:');
 }
 
 module.exports = {
