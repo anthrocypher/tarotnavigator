@@ -31,6 +31,13 @@ $ node index.js
   ...
 
 ? Enter card name: the fool
+
+Since this is a Major Arcana card, we know we're working with macro
+energies that move us from one place to another in our lives.
+
+As part of Line 1, this card deals with our foundational identity, our
+understanding of ourselves, and how we show up in the world. Think of this
+as the caterpillar line.
 ```
 
 Or browse by suit, card type, or category:
