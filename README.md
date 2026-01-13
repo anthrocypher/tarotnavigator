@@ -2,7 +2,7 @@
 
 A CLI app for lightweight tarot card interpretations. TarotNavigator lets users familiarize themselves with categories and subjective themes that persist across many tarot decks, surfacing where these categories overlap in a given card.
 
-Note: This is a toy app, and not intended as a means of mental heath support. 
+_Note: This is a toy app, and not intended as a means of mental heath support._ 
 
 ## Installation
 
@@ -19,8 +19,9 @@ npm install
 ```bash
 # Interactive menu
 node index.js
+```
 
-##Usage Examples
+## Usage
 
 Look up a card directly:
 ```bash
