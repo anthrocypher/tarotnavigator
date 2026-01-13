@@ -23,17 +23,23 @@ node index.js
 
 ## Usage
 
-Look up a card directly:
-```bash
-$ node index.js "the fool"
-```
-
-Or browse interactively by suit, card type, or category:
+Search for a specific card:
 ```bash
 $ node index.js
-? What would you like to do?
-  > Search for a Card
-    Browse by Suit
-    Browse by Card Type
-    ...
+? Select an option: (Use arrow keys)
+❯ Search for a Card
+  ...
+
+? Enter card name: the fool
+```
+
+Or browse by suit, card type, or category:
+```bash
+$ node index.js
+? Select an option: (Use arrow keys)
+  Search for a Card
+❯ Browse by Suit
+  Browse by Card Type
+  Browse by Category
+  ...
 ```
