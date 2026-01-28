@@ -1,6 +1,6 @@
 # TarotNavigator
 
-A CLI app for lightweight tarot card interpretations. TarotNavigator lets users familiarize themselves with categories and subjective themes associated with many decks, surfacing where these categories overlap in a given card.
+A CLI app for lightweight tarot card interpretations. TarotNavigator lets users familiarize themselves with subjective themes and grouped categories associated with many decks, surfacing where these overlap in a given card.
 
 From a programming perspective, this is an exercise in rule-based mapping and cross-referenced indexing. 
 
